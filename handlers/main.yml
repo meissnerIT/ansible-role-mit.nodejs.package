@@ -2,6 +2,11 @@
 # Handler to handle common notifications. Handlers are called by other plays.
 # See http://docs.ansible.com/playbooks_intro.html for more information about handlers.
 
-- name: No action after apt-package-has-been-changed
-  ansible.builtin.meta: noop
+- name: Include inventory_hostname.yml after change
+  ansible.builtin.include_tasks: "{{ tasks_file }}"
+  when: tasks_file != ""
+  vars:
+    tasks_file: "{{ lookup('ansible.builtin.first_found', files, errors='ignore') }}"
+    files:
+      - local/roles/{{ ansible_role_name }}/tasks/{{ inventory_hostname }}.yml
   listen: apt-package-has-been-changed
