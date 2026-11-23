@@ -4,7 +4,7 @@
 
 - name: Include inventory_hostname.yml after change
   ansible.builtin.include_tasks: "{{ tasks_file }}"
-  when: tasks_file != ""
+  when: tasks_file is not none
   vars:
     tasks_file: "{{ lookup('ansible.builtin.first_found', files, errors='ignore') }}"
     files:
